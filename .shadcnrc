@@ -1,0 +1,10 @@
+{
+  "src": "src",
+  "components": [
+    "button"
+  ],
+  "componentsDir": "src/components/ui",
+  "tailwind": true,
+  "css": "tailwind",
+  "appDir": true
+}
