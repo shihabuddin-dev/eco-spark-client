@@ -44,21 +44,44 @@
   --color-destructive-foreground: var(--destructive-foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Marquee animations */
+  --animate-marquee: marquee var(--duration) linear infinite;
+  --animate-marquee-reverse: marquee-reverse var(--duration) linear infinite;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+  --animate-marquee-vertical-reverse: marquee-vertical-reverse var(--duration) linear infinite;
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(calc(-100% - var(--gap))); }
+  }
+  @keyframes marquee-reverse {
+    from { transform: translateX(calc(-100% - var(--gap))); }
+    to   { transform: translateX(0); }
+  }
+  @keyframes marquee-vertical {
+    from { transform: translateY(0); }
+    to   { transform: translateY(calc(-100% - var(--gap))); }
+  }
+  @keyframes marquee-vertical-reverse {
+    from { transform: translateY(calc(-100% - var(--gap))); }
+    to   { transform: translateY(0); }
+  }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #020617;
-    --foreground: #f8fafc;
-    --muted: #0f172a;
-    --muted-foreground: #94a3b8;
-    --popover: #0f172a;
-    --border: #1e293b;
-    --input: #0f172a;
+@custom-variant dark (&:is(.dark *), &:is(.dark));
 
-    --glass: rgba(15, 23, 42, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.05);
-  }
+.dark {
+  --background: #020617;
+  --foreground: #f8fafc;
+  --muted: #0f172a;
+  --muted-foreground: #94a3b8;
+  --popover: #0f172a;
+  --border: #1e293b;
+  --input: #0f172a;
+
+  --glass: rgba(15, 23, 42, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.05);
 }
 
 body {
