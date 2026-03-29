@@ -13,7 +13,15 @@ export const getAuthHeaders = async () => {
 };
 
 export const fetchServer = async (endpoint: string, options: RequestInit = {}) => {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+  let baseUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+  
+  // Ensure the server fetch always uses the absolute backend URL
+  if (baseUrl.startsWith("/")) {
+      baseUrl = "https://eco-spark-server.vercel.app/api";
+  } else if (baseUrl.includes("eco-spark-client.vercel.app")) {
+      baseUrl = "https://eco-spark-server.vercel.app/api";
+  }
+
   const authHeaders = await getAuthHeaders();
 
   const headers: Record<string, string> = {

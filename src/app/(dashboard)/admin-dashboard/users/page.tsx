@@ -12,13 +12,24 @@ interface PageProps {
 export default async function AdminUsersPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const queryString = buildQueryString(params);
-  const usersRes: ApiResponse<User[]> = await fetchServer(`/admin/users${queryString ? `?${queryString}` : ""}`);
+
+  let usersRes: ApiResponse<User[]> = { success: false, message: "", data: [] };
+
+  try {
+    usersRes = await fetchServer(
+      `/admin/users${queryString ? `?${queryString}` : ""}`,
+    );
+  } catch (error) {
+    console.error("Failed to fetch admin users:", error);
+  }
 
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">User Management</h1>
-        <p className="text-zinc-500 dark:text-zinc-400">Manage community accounts and roles.</p>
+        <p className="text-zinc-500 dark:text-zinc-400">
+          Manage community accounts and roles.
+        </p>
       </div>
 
       <UserTable initialData={usersRes} />
