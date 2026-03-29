@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -69,6 +70,17 @@ export default function RegisterPage() {
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? "Creating account..." : "Register"}
           </Button>
+
+          {/* <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-zinc-200 dark:border-zinc-800"></span>
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white dark:bg-zinc-950 px-2 text-zinc-500">Or continue with</span>
+            </div>
+          </div>
+
+          <GoogleAuthButton /> */}
         </form>
 
         <p className="mt-8 text-center text-sm text-zinc-500">

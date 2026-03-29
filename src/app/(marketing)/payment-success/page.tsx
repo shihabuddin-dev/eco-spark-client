@@ -12,7 +12,9 @@ function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const router = useRouter();
-  const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
+  const [status, setStatus] = useState<"loading" | "success" | "error">(
+    "loading",
+  );
 
   useEffect(() => {
     if (sessionId) {
@@ -24,7 +26,7 @@ function PaymentSuccessContent() {
 
   const verifyPayment = async () => {
     try {
-      await api.get(`/payments/verify?session_id=${sessionId}`);
+      await api.get(`/payments/verify/${sessionId}`);
       setStatus("success");
       toast.success("Payment verified! You now have access to this idea.");
     } catch (err: any) {
@@ -50,7 +52,8 @@ function PaymentSuccessContent() {
           </div>
           <h1 className="text-3xl font-bold">Payment Successful!</h1>
           <p className="text-zinc-500">
-            Thank you for supporting sustainability innovation. You can now view the full details of the idea.
+            Thank you for supporting sustainability innovation. You can now view
+            the full details of the idea.
           </p>
           <div className="flex flex-col gap-3 pt-6">
             <Button className="h-12 rounded-xl font-bold" asChild>
@@ -72,7 +75,8 @@ function PaymentSuccessContent() {
           </div>
           <h1 className="text-3xl font-bold">Payment Error</h1>
           <p className="text-zinc-500">
-            We couldn&apos;t verify your payment. If you have been charged, please contact our support team.
+            We couldn&apos;t verify your payment. If you have been charged,
+            please contact our support team.
           </p>
           <div className="flex flex-col gap-3 pt-6">
             <Button className="h-12 rounded-xl font-bold" asChild>
@@ -87,11 +91,13 @@ function PaymentSuccessContent() {
 
 export default function PaymentSuccessPage() {
   return (
-    <Suspense fallback={
-      <div className="flex min-h-[80vh] items-center justify-center">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="flex min-h-[80vh] items-center justify-center">
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        </div>
+      }
+    >
       <PaymentSuccessContent />
     </Suspense>
   );

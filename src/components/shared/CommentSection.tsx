@@ -12,10 +12,11 @@ import { cn } from "@/lib/utils";
 
 import { Comment } from "@/types";
 
-export const CommentSection = ({ ideaId, initialComments }: { ideaId: string; initialComments?: Comment[] }) => {
+export const CommentSection = ({ idea, initialComments }: { idea: any; initialComments?: Comment[] }) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [commentText, setCommentText] = useState("");
+  const ideaId = idea.id;
 
   const { data: comments, isLoading } = useQuery({
     queryKey: ["comments", ideaId],
@@ -28,7 +29,7 @@ export const CommentSection = ({ ideaId, initialComments }: { ideaId: string; in
 
   const addCommentMutation = useMutation({
     mutationFn: async ({ content, parentId }: { content: string; parentId?: string }) => {
-      return api.post(`/comments`, { ideaId, content, parentId });
+      return api.post(`/comments/ideas/${ideaId}`, { content, parentId });
     },
     onSuccess: () => {
       setCommentText("");
@@ -51,6 +52,14 @@ export const CommentSection = ({ ideaId, initialComments }: { ideaId: string; in
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return toast.error("Please login to comment");
+    
+    // Check if it's a paid idea and user hasn't purchased it
+    if (idea.isPaid && !idea.hasPurchased && user.role !== "ADMIN" && user.id !== idea.authorId) {
+      return toast.error("Payment required to join this discussion", {
+        description: "Please purchase this idea to share your thoughts.",
+      });
+    }
+
     if (!commentText.trim()) return;
     addCommentMutation.mutate({ content: commentText });
   };
@@ -124,16 +133,21 @@ export const CommentSection = ({ ideaId, initialComments }: { ideaId: string; in
   return (
     <div className="space-y-12">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="relative overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50 focus-within:ring-2 focus-within:ring-primary/20 dark:border-zinc-800 dark:bg-zinc-900/50">
+        <div className="relative overflow-hidden rounded-[2rem] border-2 border-zinc-200 bg-white focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10 transition-all duration-300 dark:border-zinc-800 dark:bg-zinc-950 dark:focus-within:border-primary/50 shadow-sm">
           <textarea
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
-            placeholder="Share your thoughts or feedback..."
-            className="w-full min-h-[120px] bg-transparent p-4 text-sm focus:outline-none resize-none"
+            placeholder="Share your insightful thoughts or constructive feedback..."
+            className="w-full min-h-[140px] bg-transparent p-6 text-base focus:outline-none resize-none placeholder:text-zinc-400 dark:text-zinc-100"
           />
-          <div className="flex items-center justify-end p-2 border-t border-zinc-200 dark:border-zinc-800">
-            <Button type="submit" disabled={!commentText.trim() || addCommentMutation.isPending}>
-              {addCommentMutation.isPending ? "Posting..." : "Post Comment"}
+          <div className="flex items-center justify-between p-3 px-6 border-t border-zinc-100 bg-zinc-50/80 dark:border-zinc-800 dark:bg-zinc-900/50">
+            <span className="text-[11px] font-bold tracking-widest uppercase text-zinc-400 hidden sm:inline-block">Be respectful & constructive</span>
+            <Button 
+              type="submit" 
+              disabled={!commentText.trim() || addCommentMutation.isPending}
+              className="rounded-xl px-8 h-11 font-bold shadow-lg shadow-primary/20 active:scale-95 transition-transform"
+            >
+              {addCommentMutation.isPending ? "Posting..." : "Join Discussion"}
             </Button>
           </div>
         </div>

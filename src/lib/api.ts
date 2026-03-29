@@ -1,7 +1,13 @@
 import axios from "axios";
 
+// Client-side uses relative path for proxy, Server uses absolute path
+const isServer = typeof window === "undefined";
+const baseURL = isServer 
+  ? (process.env.BACKEND_URL || process.env.NEXT_PUBLIC_API_URL || "https://eco-spark-server.vercel.app/api") + "/v1"
+  : "/api/v1";
+
 const api = axios.create({
-  baseURL: (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api") + "/v1",
+  baseURL,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",

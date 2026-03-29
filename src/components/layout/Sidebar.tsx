@@ -2,15 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { 
-  LayoutDashboard, 
-  Users, 
-  Lightbulb, 
-  Settings, 
+import {
+  LayoutDashboard,
+  Users,
+  Lightbulb,
+  Settings,
   LogOut,
   Leaf,
   Tag,
-  Plus
+  Plus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -31,7 +31,11 @@ export const Sidebar = () => {
   const memberMenuItems = [
     { icon: LayoutDashboard, label: "Overview", href: "/member-dashboard" },
     { icon: Lightbulb, label: "My Ideas", href: "/member-dashboard/ideas" },
-    { icon: Plus, label: "Create Idea", href: "/member-dashboard/ideas/create" },
+    {
+      icon: Plus,
+      label: "Create Idea",
+      href: "/member-dashboard/ideas/create",
+    },
     { icon: Settings, label: "Profile", href: "/member-dashboard/profile" },
   ];
 
@@ -40,12 +44,16 @@ export const Sidebar = () => {
   return (
     <aside className="fixed left-0 top-0 h-screen w-[var(--sidebar-width)] border-r border-border bg-card/80 dark:bg-slate-950/50 backdrop-blur-2xl z-50 transition-all duration-300">
       <div className="flex flex-col h-full p-6">
-        <div className="flex items-center gap-3 px-2 mb-10">
-          <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20">
-            <Leaf className="text-accent-foreground w-6 h-6" />
+        <Link href="/">
+          <div className="flex items-center gap-3 px-2 mb-10">
+            <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20">
+              <Leaf className="text-accent-foreground w-6 h-6" />
+            </div>
+            <span className="text-xl font-bold tracking-tight text-foreground">
+              EcoSpark
+            </span>
           </div>
-          <span className="text-xl font-bold tracking-tight text-foreground">EcoSpark</span>
-        </div>
+        </Link>
 
         <nav className="flex-1 space-y-1">
           {menuItems.map((item) => {
@@ -58,13 +66,17 @@ export const Sidebar = () => {
                   "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group text-sm font-medium",
                   isActive
                     ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
                 )}
               >
-                <item.icon className={cn(
-                  "w-5 h-5",
-                  isActive ? "text-primary-foreground" : "text-muted-foreground group-hover:text-foreground"
-                )} />
+                <item.icon
+                  className={cn(
+                    "w-5 h-5",
+                    isActive
+                      ? "text-primary-foreground"
+                      : "text-muted-foreground group-hover:text-foreground",
+                  )}
+                />
                 {item.label}
               </Link>
             );

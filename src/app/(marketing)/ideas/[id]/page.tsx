@@ -1,37 +1,47 @@
-export const dynamic = "force-dynamic";
-
-import { ApiResponse, Idea, Comment } from "@/types";
+import { Suspense } from "react";
 import { IdeaDetailsContent } from "@/components/features/ideas/IdeaDetailsContent";
 import { getIdeaById } from "@/actions/idea.actions";
 import { fetchServer } from "@/lib/api-server";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { IdeaDetailsSkeleton } from "@/components/features/ideas/IdeaDetailsSkeleton";
+
+export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-export default async function IdeaDetailsPage({ params }: PageProps) {
-  const { id } = await params;
-  
+async function IdeaDetailsDataFetcher({ id }: { id: string }) {
   try {
-    const idea: Idea = await getIdeaById(id);
-    const commentsRes: ApiResponse<Comment[]> = await fetchServer(`/comments/ideas/${id}`);
+    const idea = await getIdeaById(id);
+    const commentsRes = await fetchServer(`/comments/ideas/${id}`);
+    const comments = commentsRes.data;
 
-    const comments: Comment[] = commentsRes.data;
-
-    return (
-      <div className="mx-auto max-w-7xl px-6 py-12">
-        <Link href="/ideas" className="mb-8 inline-flex items-center text-sm font-medium text-zinc-500 hover:text-primary transition-colors">
-           <ArrowLeft className="mr-2 h-4 w-4" /> Back to all ideas
-        </Link>
-        
-        <IdeaDetailsContent idea={idea} comments={comments} />
-      </div>
-    );
+    return <IdeaDetailsContent idea={idea} comments={comments} />;
   } catch (error) {
     console.error("Error fetching idea:", error);
     return notFound();
   }
+}
+
+export default async function IdeaDetailsPage({ params }: PageProps) {
+  const { id } = await params;
+
+  return (
+    <div className="mx-auto max-w-7xl px-6 py-12">
+      <Link 
+        href="/ideas" 
+        className="mb-8 inline-flex items-center text-sm font-black uppercase tracking-widest text-zinc-400 hover:text-primary transition-all active:scale-95 group"
+      >
+        <ArrowLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" /> 
+        Back to all ideas
+      </Link>
+      
+      <Suspense fallback={<IdeaDetailsSkeleton />}>
+        <IdeaDetailsDataFetcher id={id} />
+      </Suspense>
+    </div>
+  );
 }

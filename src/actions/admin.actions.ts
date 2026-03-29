@@ -138,41 +138,13 @@ export async function updateIdeaStatus(
   feedback?: string
 ) {
   try {
-    let response;
-
-    switch (status) {
-      case "APPROVED":
-        response = await fetchServer(`/admin/ideas/${id}/approve`, {
-          method: "PATCH",
-        });
-        break;
-
-      case "REJECTED":
-        response = await fetchServer(`/admin/ideas/${id}/reject`, {
-          method: "PATCH",
-          body: JSON.stringify({ feedback: feedback || "" }),
-        });
-        break;
-
-      case "UNDER_REVIEW":
-        response = await fetchServer(`/ideas/${id}/submit`, {
-          method: "PATCH",
-        });
-        break;
-
-      case "DRAFT":
-        response = await fetchServer(`/ideas/${id}`, {
-          method: "PATCH",
-          body: JSON.stringify({ status: "DRAFT" }),
-        });
-        break;
-
-      default:
-        throw new Error(`Invalid status: ${status}`);
-    }
+    const response = await fetchServer(`/admin/ideas/${id}/status`, {
+      method: "PATCH",
+      body: JSON.stringify({ status, feedback: feedback || "" }),
+    });
 
     revalidatePath("/admin-dashboard/ideas");
-    return { success: true, data: response || { id, status } };
+    return { success: true, data: response };
   } catch (error: any) {
     return { success: false, error: error.message || "Failed to update idea status" };
   }

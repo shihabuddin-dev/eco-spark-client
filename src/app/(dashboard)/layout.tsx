@@ -37,16 +37,19 @@ export default function DashboardLayout({
             {user?.role === "ADMIN" ? "Administrator" : "Member"} Dashboard
           </h2>
           <div className="flex items-center gap-4">
-            <span className="text-sm font-medium hidden md:block">{user?.name}</span>
+            <span className="text-sm font-medium hidden md:block">
+              {user?.name}
+            </span>
             <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 overflow-hidden flex items-center justify-center text-xs font-bold text-primary">
-              {user?.name?.split(" ").map(n => n[0]).join("") || "U"}
+              {user?.name
+                ?.split(" ")
+                .map((n) => n[0])
+                .join("") || "U"}
             </div>
           </div>
         </header>
         <main className="p-8 pb-16">
-          <div className="max-w-7xl mx-auto space-y-8">
-            {children}
-          </div>
+          <div className="max-w-7xl mx-auto space-y-8">{children}</div>
         </main>
       </div>
     </div>

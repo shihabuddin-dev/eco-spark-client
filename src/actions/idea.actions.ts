@@ -12,19 +12,19 @@ export async function getIdeas(params: any) {
 }
 
 export async function getIdeaById(id: string) {
-  const response: Idea = await fetchServer(`/ideas/${id}?include=author,category,votes,comments`);
-  return response;
+  const response: ApiResponse<Idea> = await fetchServer(`/ideas/${id}?include=author,category,votes,comments`);
+  return response.data;
 }
 
 export async function voteIdea(ideaId: string, voteType: "UPVOTE" | "DOWNVOTE") {
   try {
-     const response = await fetchServer(`/ideas/${ideaId}/vote`, {
+     const response = await fetchServer(`/votes/${ideaId}/vote`, {
        method: "POST",
        body: JSON.stringify({ voteType }),
      });
      revalidatePath(`/ideas/${ideaId}`);
      revalidatePath("/ideas");
-     return { success: true, data: response };
+     return { success: true, data: response.data };
   } catch (error: any) {
     return { success: false, error: error.message || "Failed to vote" };
   }
@@ -32,11 +32,22 @@ export async function voteIdea(ideaId: string, voteType: "UPVOTE" | "DOWNVOTE") 
 
 export async function purchaseIdea(ideaId: string) {
   try {
-    const response = await fetchServer("/payments/create-checkout-session", {
+    const response = await fetchServer("/payments/create-checkout", {
       method: "POST",
       body: JSON.stringify({ ideaId }),
     });
-    return { success: true, data: response };
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Failed to initiate purchase" };
+  }
+}
+export async function purchaseProPlan() {
+  try {
+    const response = await fetchServer("/payments/create-checkout", {
+      method: "POST",
+      body: JSON.stringify({ isProPlan: true }),
+    });
+    return { success: true, data: response.data };
   } catch (error: any) {
     return { success: false, error: error.message || "Failed to initiate purchase" };
   }

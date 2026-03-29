@@ -1,32 +1,40 @@
+import { Suspense } from "react";
 import { IdeaList } from "@/components/features/ideas/IdeaList";
 import { IdeaFilters } from "@/components/features/ideas/IdeaFilters";
-export const dynamic = "force-dynamic";
-
-import { ApiResponse, Idea } from "@/types";
+import { SectionHeader } from "@/components/shared/SectionHeader";
 import { getIdeas } from "@/actions/idea.actions";
+import { IdeaListSkeleton } from "@/components/features/ideas/IdeaListSkeleton";
+
+export const dynamic = "force-dynamic";
 
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function IdeasPage({ searchParams }: PageProps) {
+async function IdeasDataFetcher({ searchParams }: { searchParams: any }) {
   const params = await searchParams;
-  const ideas: ApiResponse<Idea[]> = await getIdeas({ ...params, status: "APPROVED" });
+  const ideas = await getIdeas({
+    ...params,
+    status: "APPROVED",
+  });
 
+  return <IdeaList initialData={ideas} />;
+}
+
+export default function IdeasPage({ searchParams }: PageProps) {
   return (
-    <div className="mx-auto max-w-7xl px-6 py-12 space-y-12">
-      <div className="space-y-4">
-        <h1 className="text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 md:text-5xl">
-          Sustainability <span className="text-primary">Ideas</span>
-        </h1>
-        <p className="max-w-2xl text-lg text-zinc-500 dark:text-zinc-400">
-          Explore and support community-driven projects aimed at reducing environmental impact and promoting a greener future.
-        </p>
-      </div>
+    <div className="mx-auto max-w-7xl px-6 py-24 space-y-12">
+      <SectionHeader 
+        title="Sustainability Ideas"
+        subtitle="Explore and support community-driven projects aimed at reducing environmental impact and promoting a greener future."
+        badge="Browse"
+      />
 
       <IdeaFilters />
-      
-      <IdeaList initialData={ideas} />
+
+      <Suspense fallback={<IdeaListSkeleton />}>
+        <IdeasDataFetcher searchParams={searchParams} />
+      </Suspense>
     </div>
   );
 }
