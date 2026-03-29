@@ -12,10 +12,11 @@ import { cn } from "@/lib/utils";
 
 import { Comment } from "@/types";
 
-export const CommentSection = ({ ideaId, initialComments }: { ideaId: string; initialComments?: Comment[] }) => {
+export const CommentSection = ({ idea, initialComments }: { idea: any; initialComments?: Comment[] }) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [commentText, setCommentText] = useState("");
+  const ideaId = idea.id;
 
   const { data: comments, isLoading } = useQuery({
     queryKey: ["comments", ideaId],
@@ -51,6 +52,14 @@ export const CommentSection = ({ ideaId, initialComments }: { ideaId: string; in
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return toast.error("Please login to comment");
+    
+    // Check if it's a paid idea and user hasn't purchased it
+    if (idea.isPaid && !idea.hasPurchased && user.role !== "ADMIN" && user.id !== idea.authorId) {
+      return toast.error("Payment required to join this discussion", {
+        description: "Please purchase this idea to share your thoughts.",
+      });
+    }
+
     if (!commentText.trim()) return;
     addCommentMutation.mutate({ content: commentText });
   };

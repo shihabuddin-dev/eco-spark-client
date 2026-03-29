@@ -44,8 +44,8 @@ function Footer() {
               <h4 className="font-bold mb-4 tracking-tight">Resources</h4>
               <ul className="space-y-3 text-sm text-zinc-600 dark:text-zinc-400 font-bold">
                  <li><Link href="/faq" className="hover:text-primary transition-colors">FAQ</Link></li>
-                 <li><Link href="#" className="hover:text-primary transition-colors">Terms of Service</Link></li>
-                 <li><Link href="#" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
+                 <li><Link href="/terms" className="hover:text-primary transition-colors">Terms of Service</Link></li>
+                 <li><Link href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
               </ul>
            </div>
         </div>

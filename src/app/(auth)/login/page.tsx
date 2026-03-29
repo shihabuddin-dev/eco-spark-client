@@ -9,6 +9,7 @@ import { useAuth } from "@/components/providers/AuthProvider";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useState } from "react";
+import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -20,7 +21,7 @@ type LoginForm = z.infer<typeof loginSchema>;
 export default function LoginPage() {
   const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
   });
@@ -61,6 +62,17 @@ export default function LoginPage() {
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? "Logging in..." : "Login"}
           </Button>
+
+          {/* <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-zinc-200 dark:border-zinc-800"></span>
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white dark:bg-zinc-950 px-2 text-zinc-500">Or continue with</span>
+            </div>
+          </div>
+
+          <GoogleAuthButton /> */}
         </form>
 
         <p className="mt-8 text-center text-sm text-zinc-500">
