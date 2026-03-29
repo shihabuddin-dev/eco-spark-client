@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 
+import { SectionHeader } from "../shared/SectionHeader";
+
 export function FAQSection() {
   const faqs = [
     { q: "What is EcoSpark?", a: "EcoSpark is a decentralized portal designed to help teams and individuals share, deploy, and scale environmental impact projects efficiently." },
@@ -16,17 +18,11 @@ export function FAQSection() {
   return (
     <section className="py-24 relative overflow-hidden bg-zinc-50 dark:bg-[#09090b] border-t border-zinc-50 dark:border-white/5">
       <div className="container mx-auto px-6 max-w-3xl relative z-10">
-        <div className="mb-16 text-center">
-          <div className="mb-4 inline-flex items-center rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1">
-            <span className="text-xs font-medium text-emerald-700 dark:text-emerald-400">FAQ</span>
-          </div>
-          <h2 className="text-4xl md:text-5xl font-semibold tracking-tight text-zinc-900 dark:text-white mb-4">
-            Got questions?
-          </h2>
-          <p className="text-lg text-zinc-600 dark:text-zinc-400 font-medium">
-            Everything you need to know about EcoSpark and how to get started.
-          </p>
-        </div>
+        <SectionHeader
+          title="Got questions?"
+          subtitle="Everything you need to know about EcoSpark and how to get started."
+          badge="FAQ"
+        />
 
         <div className="flex flex-col gap-4">
           {faqs.map((faq, i) => (

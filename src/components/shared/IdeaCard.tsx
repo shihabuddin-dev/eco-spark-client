@@ -39,13 +39,13 @@ export const IdeaCard = ({ idea }: IdeaCardProps) => {
           </div>
         )}
         {isAuthor && (
-           <div className={cn(
-             "rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-sm",
-             idea.status === "APPROVED" ? "bg-emerald-500/90" : 
-             idea.status === "REJECTED" ? "bg-rose-500/90" : "bg-zinc-500/90"
-           )}>
-             {idea.status}
-           </div>
+          <div className={cn(
+            "rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-sm",
+            idea.status === "APPROVED" ? "bg-emerald-500/90" :
+              idea.status === "REJECTED" ? "bg-rose-500/90" : "bg-zinc-500/90"
+          )}>
+            {idea.status}
+          </div>
         )}
       </div>
 
@@ -74,7 +74,7 @@ export const IdeaCard = ({ idea }: IdeaCardProps) => {
         <h3 className="mb-1.5 text-[15px] leading-tight font-black text-zinc-900 dark:text-zinc-50 group-hover:text-primary transition-colors line-clamp-1">
           {idea.title}
         </h3>
-        
+
         <p className="mb-4 line-clamp-2 text-[12px] leading-relaxed text-zinc-500 dark:text-zinc-400 font-medium tracking-tight">
           {idea.description}
         </p>
@@ -90,9 +90,9 @@ export const IdeaCard = ({ idea }: IdeaCardProps) => {
               <span>{idea._count?.comments || 0}</span>
             </div>
           </div>
-          
+
           <Link href={`/ideas/${idea.id}`}>
-            <Button size="sm" variant="ghost" className="h-7 px-3 text-[10px] font-black uppercase tracking-widest hover:bg-zinc-100 dark:hover:bg-zinc-900">
+            <Button size="sm" variant="outline" className="h-7 px-3 text-[10px] font-black uppercase tracking-widest cursor-pointer">
               View
             </Button>
           </Link>
@@ -105,9 +105,9 @@ export const IdeaCard = ({ idea }: IdeaCardProps) => {
                 Edit
               </Button>
             </Link>
-            <Button 
-              variant="ghost" 
-              size="sm" 
+            <Button
+              variant="ghost"
+              size="sm"
               className="flex-1 text-[9px] h-7 font-black uppercase tracking-tighter text-rose-500 hover:bg-rose-50 hover:text-rose-600 rounded-lg"
               disabled={deleteMutation.isPending}
               onClick={(e: React.MouseEvent) => {
