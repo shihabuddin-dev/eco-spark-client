@@ -15,6 +15,7 @@ import {
 import { cn } from "@/lib/utils";
 
 import { useAuth } from "@/components/providers/AuthProvider";
+import Logo from "../shared/Logo";
 
 export const Sidebar = () => {
   const pathname = usePathname();
@@ -44,16 +45,9 @@ export const Sidebar = () => {
   return (
     <aside className="fixed left-0 top-0 h-screen w-[var(--sidebar-width)] border-r border-border bg-card/80 dark:bg-slate-950/50 backdrop-blur-2xl z-50 transition-all duration-300">
       <div className="flex flex-col h-full p-6">
-        <Link href="/">
-          <div className="flex items-center gap-3 px-2 mb-10">
-            <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20">
-              <Leaf className="text-accent-foreground w-6 h-6" />
-            </div>
-            <span className="text-xl font-bold tracking-tight text-foreground">
-              EcoSpark
-            </span>
-          </div>
-        </Link>
+       <div className="pb-6 md:pb-10">
+        <Logo/>
+       </div>
 
         <nav className="flex-1 space-y-1">
           {menuItems.map((item) => {

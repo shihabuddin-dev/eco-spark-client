@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { fetchServer } from "@/lib/api-server";
-import { Idea, ApiResponse } from "@/types";
+import { Idea, ApiResponse, Category } from "@/types";
 import { AdminIdeaTable } from "@/components/features/admin/AdminIdeaTable";
 import { buildQueryString } from "@/lib/query-builder";
 
@@ -14,11 +14,13 @@ export default async function AdminIdeasPage({ searchParams }: PageProps) {
   const queryString = buildQueryString(params);
 
   let ideasRes: ApiResponse<Idea[]> = { success: false, message: "", data: [] };
+  let categoriesRes: ApiResponse<Category[]> = { success: false, message: "", data: [] };
 
   try {
-    ideasRes = await fetchServer(
-      `/admin/ideas${queryString ? `?${queryString}` : ""}`,
-    );
+    [ideasRes, categoriesRes] = await Promise.all([
+      fetchServer(`/admin/ideas${queryString ? `?${queryString}` : ""}`),
+      fetchServer("/categories")
+    ]);
   } catch (error) {
     console.error("Failed to fetch admin ideas:", error);
   }
@@ -34,7 +36,7 @@ export default async function AdminIdeasPage({ searchParams }: PageProps) {
         </p>
       </div>
 
-      <AdminIdeaTable initialData={ideasRes} />
+      <AdminIdeaTable initialData={ideasRes} categories={categoriesRes.data || []} />
     </div>
   );
 }

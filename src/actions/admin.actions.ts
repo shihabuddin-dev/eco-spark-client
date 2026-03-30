@@ -149,3 +149,18 @@ export async function updateIdeaStatus(
     return { success: false, error: error.message || "Failed to update idea status" };
   }
 }
+
+export async function editIdea(id: string, ideaData: any) {
+  try {
+    const response = await fetchServer(`/admin/ideas/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(ideaData),
+    });
+
+    revalidatePath("/admin-dashboard/ideas");
+    revalidatePath(`/ideas/${id}`);
+    return { success: true, data: response };
+  } catch (error: any) {
+    return { success: false, error: error.message || "Failed to update idea" };
+  }
+}

@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { Leaf } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import Logo from "../shared/Logo";
 
 function Footer() {
   const currentYear = new Date().getFullYear();
@@ -11,12 +12,7 @@ function Footer() {
       <div className="mx-auto max-w-7xl px-6 py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 lg:gap-16">
            <div className="md:col-span-1 space-y-4">
-              <Link href="/" className="flex items-center gap-2 group">
-                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/20">
-                   <Leaf className="h-6 w-6" />
-                 </div>
-                 <span className="text-xl font-black tracking-tight">EcoSpark</span>
-              </Link>
+              <Logo/>
               <p className="text-zinc-500 dark:text-zinc-400 text-sm font-medium leading-relaxed mt-4">
                 Crowdsourcing and funding the most impactful sustainable ideas to accelerate the transition to a greener planet.
               </p>

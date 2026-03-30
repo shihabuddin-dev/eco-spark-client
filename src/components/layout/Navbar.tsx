@@ -7,6 +7,7 @@ import { Leaf, User, LogOut, LayoutDashboard, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import Logo from "../shared/Logo";
 
 export const Navbar = () => {
   const { user, logout } = useAuth();
@@ -29,12 +30,7 @@ export const Navbar = () => {
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-zinc-200 bg-white/80 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-        <Link href="/" className="flex items-center gap-2 group z-50">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/20 transition-transform group-hover:scale-110">
-            <Leaf className="h-6 w-6" />
-          </div>
-          <span className="text-xl font-bold tracking-tight">EcoSpark</span>
-        </Link>
+        <Logo />
 
         {/* Desktop Links */}
         <div className="hidden items-center gap-6 md:flex">
@@ -114,14 +110,14 @@ export const Navbar = () => {
       {/* Mobile Menu Overlay */}
       <div
         className={cn(
-          "fixed inset-0 z-40 bg-white dark:bg-zinc-950 pt-24 px-6 md:hidden transition-all duration-300 ease-in-out",
+          "fixed inset-0 z-40 bg-white dark:bg-zinc-950 pt-20 w-full md:hidden transition-all duration-300 ease-in-out",
           isMenuOpen
             ? "opacity-100 translate-y-0 visible"
             : "opacity-0 -translate-y-4 invisible pointer-events-none",
         )}
       >
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col gap-4 border-b border-zinc-100 dark:border-zinc-800 pb-6">
+        <div className="flex flex-col gap-6 bg-white dark:bg-zinc-950">
+          <div className="px-6 flex flex-col gap-4 border-b border-zinc-100 dark:border-zinc-800 pb-6">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
