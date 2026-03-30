@@ -67,7 +67,7 @@ export default function RegisterPage() {
             {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
           </div>
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="w-full dark:bg-accent" disabled={isLoading}>
             {isLoading ? "Creating account..." : "Register"}
           </Button>
 
@@ -85,7 +85,7 @@ export default function RegisterPage() {
 
         <p className="mt-8 text-center text-sm text-zinc-500">
           Already have an account?{" "}
-          <Link href="/login" className="text-primary font-semibold hover:underline">
+          <Link href="/login" className="text-primary dark:text-accent font-semibold hover:underline">
             Login here
           </Link>
         </p>

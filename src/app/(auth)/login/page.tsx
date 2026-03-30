@@ -59,7 +59,7 @@ export default function LoginPage() {
             {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
           </div>
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="w-full dark:bg-accent" disabled={isLoading}>
             {isLoading ? "Logging in..." : "Login"}
           </Button>
 
@@ -77,7 +77,7 @@ export default function LoginPage() {
 
         <p className="mt-8 text-center text-sm text-zinc-500">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-primary font-semibold hover:underline">
+          <Link href="/register" className="text-primary dark:text-accent font-semibold hover:underline">
             Register for free
           </Link>
         </p>

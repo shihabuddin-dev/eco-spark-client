@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { Button } from "@/components/ui/Button";
-import { Leaf, User, LogOut, LayoutDashboard, Menu, X } from "lucide-react";
+import { Leaf, LogOut, LayoutDashboard, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
@@ -43,9 +43,9 @@ export const Navbar = () => {
               key={link.href}
               href={link.href}
               className={cn(
-                "text-sm font-bold transition-colors hover:text-primary dark:hover:text-primary",
+                "text-sm font-bold transition-colors hover:text-primary dark:hover:text-[#fff]",
                 pathname === link.href
-                  ? "text-primary"
+                  ? "text-accent"
                   : "text-zinc-600 dark:text-zinc-400",
               )}
             >
@@ -114,7 +114,7 @@ export const Navbar = () => {
       {/* Mobile Menu Overlay */}
       <div
         className={cn(
-          "fixed inset-0 z-40 bg-white dark:bg-zinc-950 pt-24 px-6 md:hidden transition-all duration-300 ease-in-out",
+          "absolute top-0 left-0 w-full z-40 bg-white dark:bg-zinc-950 pt-24 px-6 pb-8 md:hidden transition-all duration-300 ease-in-out",
           isMenuOpen
             ? "opacity-100 translate-y-0 visible"
             : "opacity-0 -translate-y-4 invisible pointer-events-none",
@@ -129,7 +129,7 @@ export const Navbar = () => {
                 className={cn(
                   "text-lg font-bold transition-colors",
                   pathname === link.href
-                    ? "text-primary"
+                    ? "text-accent"
                     : "text-zinc-600 dark:text-zinc-400",
                 )}
               >
@@ -169,7 +169,7 @@ export const Navbar = () => {
                 <Link href="/login">
                   <Button
                     variant="outline"
-                    className="w-full h-12 font-bold text-lg"
+                    className="w-full bg-accent text-white h-12 font-bold text-lg"
                   >
                     Login
                   </Button>

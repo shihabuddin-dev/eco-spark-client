@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import QueryProvider from "@/components/providers/QueryProvider";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import PageLoader from "@/components/ui/PageLoader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +25,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <QueryProvider>
             <AuthProvider>
+              <PageLoader/>
               {children}
               <Toaster position="top-right" richColors />
             </AuthProvider>
