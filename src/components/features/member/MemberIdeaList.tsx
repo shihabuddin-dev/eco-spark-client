@@ -39,7 +39,7 @@ export const MemberIdeaList = ({ initialData }: MemberIdeaListProps) => {
         <h3 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-2">No ideas created yet</h3>
         <p className="text-zinc-500 mb-8 max-w-sm text-center">Start your journey by sharing your first sustainability initiative with the community.</p>
         <Button onClick={() => router.push("/member-dashboard/ideas/create")} className="h-12 rounded-xl px-8 font-bold">
-           Share an Idea
+          Share an Idea
         </Button>
       </div>
     );
@@ -65,7 +65,7 @@ export const MemberIdeaList = ({ initialData }: MemberIdeaListProps) => {
         ))}
       </div>
 
-      {meta && meta.totalPage > 1 && (
+      {meta && meta.totalPages > 1 && (
         <div className="flex items-center justify-center gap-4 pt-8">
           <Button
             variant="outline"
@@ -75,11 +75,11 @@ export const MemberIdeaList = ({ initialData }: MemberIdeaListProps) => {
           >
             <ChevronLeft className="mr-2 h-4 w-4" /> Previous
           </Button>
-          <span className="text-sm font-bold text-zinc-500">Page {meta.page} of {meta.totalPage}</span>
+          <span className="text-sm font-bold text-zinc-500">Page {meta.page} of {meta.totalPages}</span>
           <Button
             variant="outline"
             className="rounded-xl h-12 px-6"
-            disabled={meta.page >= meta.totalPage}
+            disabled={meta.page >= meta.totalPages}
             onClick={() => handlePageChange(meta.page + 1)}
           >
             Next <ChevronRight className="ml-2 h-4 w-4" />

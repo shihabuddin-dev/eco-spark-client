@@ -5,13 +5,13 @@ import { useState } from "react";
 import { toggleUserRole, toggleUserStatus } from "@/actions/admin.actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
 } from "@/components/ui/Table";
 import { Button } from "@/components/ui/Button";
 import { Shield, ShieldAlert, UserX, UserCheck, Search, ChevronLeft, ChevronRight } from "lucide-react";
@@ -121,23 +121,23 @@ export const UserTable = ({ initialData }: UserTableProps) => {
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
-                    <Button 
-                      variant="ghost" 
+                    <Button
+                      variant="ghost"
                       size="sm"
-                      onClick={() => updateRoleMutation.mutate({ 
-                        id: user.id, 
-                        role: user.role === "ADMIN" ? "MEMBER" : "ADMIN" 
+                      onClick={() => updateRoleMutation.mutate({
+                        id: user.id,
+                        role: user.role === "ADMIN" ? "MEMBER" : "ADMIN"
                       })}
                     >
                       Toggle Role
                     </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       className={user.status === "ACTIVE" ? "hover:text-rose-500" : "hover:text-emerald-500"}
-                      onClick={() => toggleStatusMutation.mutate({ 
-                        id: user.id, 
-                        isBlocked: user.status === "ACTIVE" 
+                      onClick={() => toggleStatusMutation.mutate({
+                        id: user.id,
+                        isBlocked: user.status === "ACTIVE"
                       })}
                     >
                       {user.status === "ACTIVE" ? <UserX className="h-4 w-4" /> : <UserCheck className="h-4 w-4" />}
@@ -150,7 +150,7 @@ export const UserTable = ({ initialData }: UserTableProps) => {
         </Table>
       </div>
 
-      {meta && meta.totalPage > 1 && (
+      {meta && meta.totalPages > 1 && (
         <div className="flex items-center justify-center gap-4 pt-4">
           <Button
             variant="outline"
@@ -160,11 +160,11 @@ export const UserTable = ({ initialData }: UserTableProps) => {
           >
             <ChevronLeft className="h-4 w-4 mr-1" /> Previous
           </Button>
-          <span className="text-sm text-zinc-500">Page {meta.page} of {meta.totalPage}</span>
+          <span className="text-sm text-zinc-500">Page {meta.page} of {meta.totalPages}</span>
           <Button
             variant="outline"
             size="sm"
-            disabled={meta.page >= meta.totalPage}
+            disabled={meta.page >= meta.totalPages}
             onClick={() => handlePageChange(meta.page + 1)}
           >
             Next <ChevronRight className="h-4 w-4 ml-1" />
