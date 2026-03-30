@@ -36,7 +36,10 @@ export interface Idea {
     comments: number;
   };
   votesCount?: number;
-  userVote?: "UPVOTE" | "DOWNVOTE";
+  upvotes?: number;
+  downvotes?: number;
+  netVotes?: number;
+  userVote?: "UPVOTE" | "DOWNVOTE" | null;
   hasPurchased?: boolean;
 }
 

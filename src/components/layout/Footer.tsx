@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import { Leaf } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import Logo from "../shared/Logo";
 

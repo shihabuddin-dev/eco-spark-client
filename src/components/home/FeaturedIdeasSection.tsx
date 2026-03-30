@@ -43,12 +43,12 @@ export function FeaturedIdeasSection() {
         <Button
           asChild
           variant="outline"
-          className="py-6 px-10 rounded-2xl font-black text-lg gap-3 bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 dark:hover:bg-zinc-950 transition-all active:scale-95 shadow-xl shadow-zinc-200/50 dark:shadow-none group"
+          className="py-6 px-10 rounded-xl font-bold text-base md:text-lg gap-3 bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 dark:hover:bg-zinc-950 transition-all active:scale-95 shadow-md shadow-zinc-200/50 dark:shadow-none group"
         >
           <Link href="/ideas">
-            <Sparkles className="h-5 w-5 text-emerald-500 group-hover:rotate-12 transition-transform" />
+            <Sparkles className="h-5 w-5 group-hover:text-white text-emerald-500 group-hover:rotate-12 transition-transform" />
             Explore All Ideas
-            <ArrowRight className="h-5 w-5 ml-1 transition-transform group-hover:translate-x-1" />
+            <ArrowRight className="h-5 w-5 ml-1 group-hover:text-white transition-transform group-hover:translate-x-1" />
           </Link>
         </Button>
       </div>

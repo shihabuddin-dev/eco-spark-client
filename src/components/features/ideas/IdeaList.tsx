@@ -40,7 +40,7 @@ export const IdeaList = ({ initialData }: IdeaListProps) => {
         ))}
       </div>
 
-      {meta && meta.totalPage > 1 && (
+      {meta && meta.totalPages > 1 && (
         <div className="flex items-center justify-center gap-4">
           <Button
             variant="outline"
@@ -52,7 +52,7 @@ export const IdeaList = ({ initialData }: IdeaListProps) => {
           </Button>
           
           <div className="flex items-center gap-2">
-            {[...Array(meta.totalPage)].map((_, i) => (
+            {[...Array(meta.totalPages)].map((_, i) => (
               <Button
                 key={i + 1}
                 variant={meta.page === i + 1 ? "default" : "outline"}
@@ -67,7 +67,7 @@ export const IdeaList = ({ initialData }: IdeaListProps) => {
 
           <Button
             variant="outline"
-            disabled={meta.page >= meta.totalPage}
+            disabled={meta.page >= meta.totalPages}
             onClick={() => handlePageChange(meta.page + 1)}
           >
             Next

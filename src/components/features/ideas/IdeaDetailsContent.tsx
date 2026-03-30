@@ -9,31 +9,80 @@ import { CommentSection } from "@/components/shared/CommentSection";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
+import { IdeaCard } from "@/components/shared/IdeaCard";
 
-import { voteIdea, purchaseIdea } from "@/actions/idea.actions";
+import { voteIdea, purchaseIdea, getIdeaById } from "@/actions/idea.actions";
+import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
 
 interface IdeaDetailsContentProps {
   idea: Idea;
   comments: Comment[];
+  recommendedIdeas?: Idea[];
 }
 
-export const IdeaDetailsContent = ({ idea, comments }: IdeaDetailsContentProps) => {
+export const IdeaDetailsContent = ({ idea: initialIdea, comments, recommendedIdeas = [] }: IdeaDetailsContentProps) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const router = useRouter();
 
+  // Use react-query for real-time-ish updates and syncing
+  const { data: idea } = useQuery({
+    queryKey: ["idea", initialIdea.id],
+    queryFn: () => getIdeaById(initialIdea.id),
+    initialData: initialIdea,
+    refetchInterval: 30000, // Poll every 30s to keep it "real-time" from DB
+    staleTime: 10000,
+  });
+
+  // Local state for optimistic UI updates
+  const [localNetVotes, setLocalNetVotes] = useState(idea.netVotes || 0);
+  const [localUserVote, setLocalUserVote] = useState(idea.userVote);
+
+  // Sync local state when query data changes (e.g. from other users' votes or refetch)
+  useEffect(() => {
+    setLocalNetVotes(idea.netVotes || 0);
+    setLocalUserVote(idea.userVote);
+  }, [idea.netVotes, idea.userVote]);
+
   const voteMutation = useMutation({
     mutationFn: async (type: "UPVOTE" | "DOWNVOTE") => {
-       const result = await voteIdea(idea.id, type);
-       if (!result.success) throw new Error(result.error);
-       return result.data;
+      // Optimistic logic
+      let newNetVotes = localNetVotes;
+      let newUserVote: "UPVOTE" | "DOWNVOTE" | null = type;
+
+      if (localUserVote === type) {
+        // Un-voting
+        newNetVotes = type === "UPVOTE" ? localNetVotes - 1 : localNetVotes + 1;
+        newUserVote = null;
+      } else if (localUserVote === null) {
+        // New vote
+        newNetVotes = type === "UPVOTE" ? localNetVotes + 1 : localNetVotes - 1;
+        newUserVote = type;
+      } else {
+        // Switching vote
+        newNetVotes = type === "UPVOTE" ? localNetVotes + 2 : localNetVotes - 2;
+        newUserVote = type;
+      }
+
+      setLocalNetVotes(newNetVotes);
+      setLocalUserVote(newUserVote);
+
+      const result = await voteIdea(idea.id, type);
+      if (!result.success) throw new Error(result.error);
+      return result.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["idea", idea.id] });
       toast.success("Vote recorded");
-      router.refresh();
+      // router.refresh(); // No longer needed as useQuery handles it
     },
-    onError: (err: any) => toast.error(err.message || err),
+    onError: (err: any) => {
+      // Rollback on error
+      setLocalNetVotes(idea.netVotes || 0);
+      setLocalUserVote(idea.userVote);
+      toast.error(err.message || err);
+    },
   });
 
   const purchaseMutation = useMutation({
@@ -138,8 +187,8 @@ export const IdeaDetailsContent = ({ idea, comments }: IdeaDetailsContentProps) 
             <div className="p-8 rounded-2xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 shadow-lg space-y-8">
                <div className="flex items-center justify-between border-b border-zinc-100 dark:border-zinc-800 pb-6">
                   <div className="text-center">
-                     <span className="block text-2xl font-black text-zinc-900 dark:text-white">{idea._count?.votes || 0}</span>
-                     <span className="text-[9px] font-black uppercase tracking-widest text-zinc-400">Votes</span>
+                     <span className="block text-2xl font-black text-zinc-900 dark:text-white">{localNetVotes}</span>
+                     <span className="text-[9px] font-black uppercase tracking-widest text-zinc-400">Score</span>
                   </div>
                   <div className="w-px h-8 bg-zinc-100 dark:bg-zinc-800" />
                   <div className="text-center">
@@ -151,7 +200,7 @@ export const IdeaDetailsContent = ({ idea, comments }: IdeaDetailsContentProps) 
                <div className="grid grid-cols-2 gap-2">
                   <Button 
                       variant="outline"
-                      className={`h-12 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${idea.userVote === "UPVOTE" ? "bg-emerald-500 text-white border-emerald-500" : "bg-transparent text-zinc-500"}`}
+                      className={`h-12 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${localUserVote === "UPVOTE" ? "bg-emerald-500 text-white border-emerald-500" : "bg-transparent text-zinc-500"}`}
                       onClick={() => voteMutation.mutate("UPVOTE")}
                       disabled={voteMutation.isPending}
                   >
@@ -159,7 +208,7 @@ export const IdeaDetailsContent = ({ idea, comments }: IdeaDetailsContentProps) 
                   </Button>
                   <Button 
                       variant="outline"
-                      className={`h-12 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${idea.userVote === "DOWNVOTE" ? "bg-rose-500 text-white border-rose-500" : "bg-transparent text-zinc-500"}`}
+                      className={`h-12 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${localUserVote === "DOWNVOTE" ? "bg-rose-500 text-white border-rose-500" : "bg-transparent text-zinc-500"}`}
                       onClick={() => voteMutation.mutate("DOWNVOTE")}
                       disabled={voteMutation.isPending}
                   >
@@ -215,6 +264,33 @@ export const IdeaDetailsContent = ({ idea, comments }: IdeaDetailsContentProps) 
           </div>
         </div>
       </div>
+
+      {/* Recommended Ideas Section */}
+      {recommendedIdeas.length > 0 && (
+        <div className="mt-24 pt-24 border-t border-zinc-100 dark:border-zinc-900 space-y-12">
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <h2 className="text-2xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase italic">
+                Discovery <span className="text-emerald-500">Hub</span>
+              </h2>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Recommended for you based on this category</p>
+            </div>
+            <Button 
+              variant="outline" 
+              className="rounded-xl font-black text-[10px] uppercase tracking-widest h-10 px-6 border-zinc-200 dark:border-zinc-800"
+              onClick={() => router.push("/ideas")}
+            >
+              View More
+            </Button>
+          </div>
+
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {recommendedIdeas.map((recIdea) => (
+              <IdeaCard key={recIdea.id} idea={recIdea} />
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   );
 };

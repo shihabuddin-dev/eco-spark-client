@@ -34,6 +34,7 @@ export const CommentSection = ({ idea, initialComments }: { idea: any; initialCo
     onSuccess: () => {
       setCommentText("");
       queryClient.invalidateQueries({ queryKey: ["comments", ideaId] });
+      queryClient.invalidateQueries({ queryKey: ["idea", ideaId] });
       toast.success("Comment added!");
     },
     onError: (err: any) => toast.error(err),
@@ -45,6 +46,7 @@ export const CommentSection = ({ idea, initialComments }: { idea: any; initialCo
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["comments", ideaId] });
+      queryClient.invalidateQueries({ queryKey: ["idea", ideaId] });
       toast.success("Comment deleted");
     },
   });

@@ -19,7 +19,17 @@ async function IdeaDetailsDataFetcher({ id }: { id: string }) {
     const commentsRes = await fetchServer(`/comments/ideas/${id}`);
     const comments = commentsRes.data;
 
-    return <IdeaDetailsContent idea={idea} comments={comments} />;
+    // Fetch recommended ideas (same category, limit 4)
+    const { getIdeas } = await import("@/actions/idea.actions");
+    const recommendedIdeasRes = await getIdeas({ 
+      categoryId: idea.categoryId,
+      limit: 5, // Get 5 to ensure we have 4 if current is included
+      sortBy: "createdAt",
+      sortOrder: "desc"
+    });
+    const recommendedIdeas = recommendedIdeasRes.data.filter((i: any) => i.id !== id).slice(0, 4);
+
+    return <IdeaDetailsContent idea={idea} comments={comments} recommendedIdeas={recommendedIdeas} />;
   } catch (error) {
     console.error("Error fetching idea:", error);
     return notFound();
